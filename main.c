@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     printf("This is the unsorted array: ");
     for(c = 0; c < n; c++) {
 
-        original_array[c] = rand() % n;
+        original_array[c] = c % 20;
 //        printf("%d ", original_array[c]);
 
     }
