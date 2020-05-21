@@ -9,7 +9,7 @@ void mergeSort(int *, int *, int, int);
 int main(int argc, char** argv) {
 
     /********** Create and populate the array **********/
-    int n = 70000000; //atoi(argv[1]);
+    int n = 130000000; //atoi(argv[1]);
     int *original_array = malloc(n * sizeof(int));
 
     int c;
