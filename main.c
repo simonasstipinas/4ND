@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 //        Print_list(A, p*local_n);
         t = clock() - t;
         double time_taken = ((double) t) / CLOCKS_PER_SEC; // in seconds
-        printf("MergeSort took %f seconds %d to execute \n", time_taken, cores, size);
+        printf("MergeSort took %f seconds, used  %d cores, size of array: %d\n", time_taken, procesor, local_n);
     }
 
     free(A);
