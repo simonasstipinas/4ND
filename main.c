@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     MPI_Init(&argc, &argv);
     comm = MPI_COMM_WORLD;
-    MPI_Comm_size(comm, &p);
+    MPI_Comm_size(comm, &procesor);
     MPI_Comm_rank(comm, &my_rank);
 
     local_n = 100000000;//Get_n(my_rank, comm);
