@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/home/simonass/CLionProjects/MergeSort/connectivity.c" "/home/simonass/CLionProjects/MergeSort/cmake-build-debug/CMakeFiles/MergeSort.dir/connectivity.c.o"
   "/home/simonass/CLionProjects/MergeSort/main.c" "/home/simonass/CLionProjects/MergeSort/cmake-build-debug/CMakeFiles/MergeSort.dir/main.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")

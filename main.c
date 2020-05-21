@@ -29,22 +29,27 @@ const int RMAX = 20;
 
 /* Local functions */
 void Generate_list(int A[], int local_n, int my_rank);
-int  Compare(const void* a_p, const void* b_p);
+
+int Compare(const void *a_p, const void *b_p);
+
 void Print_list(int A[], int n);
+
 void Merge(int A[], int B[], int C[], int size);
 
 /* Functions involving communication */
-int  Get_n(int my_rank, MPI_Comm comm);
+int Get_n(int my_rank, MPI_Comm comm);
+
 void Merge_sort(int A[], int local_n, int my_rank,
                 int p, MPI_Comm comm);
+
 void Print_global_list(int A[], int local_n, int my_rank,
                        int p, MPI_Comm comm);
 
 
 /*-------------------------------------------------------------------*/
-int main(int argc, char* argv[]) {
-    int my_rank, p;
-    int* A;
+int main(int argc, char *argv[]) {
+    int my_rank, procesor;
+    int *A;
     int local_n;
     clock_t t;
     MPI_Comm comm;
@@ -56,19 +61,19 @@ int main(int argc, char* argv[]) {
 
     local_n = Get_n(my_rank, comm);
 
-    A = malloc(p*local_n*sizeof(int));
+    A = malloc(procesor * local_n * sizeof(int));
     Generate_list(A, local_n, my_rank);
 
 //    Print_global_list(A, local_n, my_rank, p, comm);
     if (my_rank == 0) {
         t = clock();
     }
-    Merge_sort(A, local_n, my_rank, p, comm);
+    Merge_sort(A, local_n, my_rank, procesor, comm);
     if (my_rank == 0) {
 //        Print_list(A, p*local_n);
         t = clock() - t;
-        double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
-        printf("fun() took %f seconds to execute \n", time_taken);
+        double time_taken = ((double) t) / CLOCKS_PER_SEC; // in seconds
+        printf("MergeSort took %f seconds %d to execute \n", time_taken, cores, size);
     }
 
     free(A);
@@ -105,7 +110,7 @@ int Get_n(int my_rank, MPI_Comm comm) {
 void Generate_list(int A[], int local_n, int my_rank) {
     int i;
 
-    srandom(my_rank+1);
+    srandom(my_rank + 1);
     for (i = 0; i < local_n; i++)
         A[i] = i % RMAX;
 //    qsort(A, local_n, sizeof(int), Compare);
@@ -123,13 +128,13 @@ void Generate_list(int A[], int local_n, int my_rank) {
  */
 void Print_global_list(int A[], int local_n, int my_rank, int p,
                        MPI_Comm comm) {
-    int* global_A = NULL;
+    int *global_A = NULL;
 
     if (my_rank == 0) {
-        global_A = malloc(p*local_n*sizeof(int));
+        global_A = malloc(p * local_n * sizeof(int));
         MPI_Gather(A, local_n, MPI_INT, global_A, local_n, MPI_INT, 0,
                    comm);
-        Print_list(global_A, p*local_n);
+        Print_list(global_A, p * local_n);
         free(global_A);
     } else {
         MPI_Gather(A, local_n, MPI_INT, global_A, local_n, MPI_INT, 0,
@@ -145,9 +150,9 @@ void Print_global_list(int A[], int local_n, int my_rank, int p,
  *              the first int is less than, equal, or greater than
  *              the second.  Used by qsort.
  */
-int Compare(const void* a_p, const void* b_p) {
-    int a = *((int*)a_p);
-    int b = *((int*)b_p);
+int Compare(const void *a_p, const void *b_p) {
+    int a = *((int *) a_p);
+    int b = *((int *) b_p);
 
     if (a < b)
         return -1;
@@ -192,8 +197,8 @@ void Merge_sort(int A[], int local_n, int my_rank,
     int *B, *C;
     MPI_Status status;
 
-    B = malloc(p*local_n*sizeof(int));
-    C = malloc(p*local_n*sizeof(int));
+    B = malloc(p * local_n * sizeof(int));
+    C = malloc(p * local_n * sizeof(int));
 
     while (!done && bitmask < p) {
         partner = my_rank ^ bitmask;
@@ -203,7 +208,7 @@ void Merge_sort(int A[], int local_n, int my_rank,
         } else {
             MPI_Recv(B, size, MPI_INT, partner, 0, comm, &status);
             Merge(A, B, C, size);
-            size = 2*size;
+            size = 2 * size;
             bitmask <<= 1;
         }
     }
@@ -229,20 +234,22 @@ void Merge(int A[], int B[], int C[], int size) {
     while (ai < size && bi < size) {
         if (A[ai] <= B[bi]) {
             C[ci] = A[ai];
-            ci++; ai++;
+            ci++;
+            ai++;
         } else {
             C[ci] = B[bi];
-            ci++; bi++;
+            ci++;
+            bi++;
         }
     }
 
     if (ai >= size)
-        for (; ci < 2*size; ci++, bi++)
+        for (; ci < 2 * size; ci++, bi++)
             C[ci] = B[bi];
     else
-        for (; ci < 2*size; ci++, ai++)
+        for (; ci < 2 * size; ci++, ai++)
             C[ci] = A[ai];
 
-    memcpy(A, C, 2*size*sizeof(int));
+    memcpy(A, C, 2 * size * sizeof(int));
 
 } /* Merge */

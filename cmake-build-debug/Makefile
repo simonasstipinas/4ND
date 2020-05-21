@@ -123,6 +123,33 @@ MergeSort/fast:
 	$(MAKE) -f CMakeFiles/MergeSort.dir/build.make CMakeFiles/MergeSort.dir/build
 .PHONY : MergeSort/fast
 
+connectivity.o: connectivity.c.o
+
+.PHONY : connectivity.o
+
+# target to build an object file
+connectivity.c.o:
+	$(MAKE) -f CMakeFiles/MergeSort.dir/build.make CMakeFiles/MergeSort.dir/connectivity.c.o
+.PHONY : connectivity.c.o
+
+connectivity.i: connectivity.c.i
+
+.PHONY : connectivity.i
+
+# target to preprocess a source file
+connectivity.c.i:
+	$(MAKE) -f CMakeFiles/MergeSort.dir/build.make CMakeFiles/MergeSort.dir/connectivity.c.i
+.PHONY : connectivity.c.i
+
+connectivity.s: connectivity.c.s
+
+.PHONY : connectivity.s
+
+# target to generate assembly for a file
+connectivity.c.s:
+	$(MAKE) -f CMakeFiles/MergeSort.dir/build.make CMakeFiles/MergeSort.dir/connectivity.c.s
+.PHONY : connectivity.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... MergeSort"
+	@echo "... connectivity.o"
+	@echo "... connectivity.i"
+	@echo "... connectivity.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

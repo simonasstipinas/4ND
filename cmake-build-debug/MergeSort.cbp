@@ -78,6 +78,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/simonass/CLionProjects/MergeSort/connectivity.c">
+			<Option target="MergeSort"/>
+		</Unit>
 		<Unit filename="/home/simonass/CLionProjects/MergeSort/main.c">
 			<Option target="MergeSort"/>
 		</Unit>

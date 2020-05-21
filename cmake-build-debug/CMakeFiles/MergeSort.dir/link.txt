@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/MergeSort.dir/main.c.o  -o MergeSort 
+/usr/bin/cc -g   CMakeFiles/MergeSort.dir/main.c.o CMakeFiles/MergeSort.dir/connectivity.c.o  -o MergeSort 
