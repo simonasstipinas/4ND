@@ -7,9 +7,9 @@
  * Output:
  *    A:     elements of distributed list after sorting
  *
- * Compile:  mpicc -g -Wall -o mpi_merge_sort mpi_merge_sort.c
+ * Compile:  mpicc -g -Wall -o main main.c
  * Run:
- *    mpiexec -n <p> ./mpi_merge_sort
+ *    mpiexec -n <p> ./main
  *       - p: the number of processes
  *
  * Notes:
