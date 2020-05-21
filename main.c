@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(comm, &procesor);
     MPI_Comm_rank(comm, &my_rank);
 
-    local_n = 100000000;//Get_n(my_rank, comm);
+    local_n = 1000;//Get_n(my_rank, comm);
 
     A = malloc(procesor * local_n * sizeof(int));
     Generate_list(A, local_n, my_rank);
