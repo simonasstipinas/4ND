@@ -4,4 +4,4 @@
 #SBATCH -c2 # kiek procesorių viename kompiuteryje
 #SBATCH -C beta # telkinys (jei alpha neveikia, bandykite beta)
 mpicc -g -Wall -o main main.c
-mpiexec -n 4 ./mpi_merge_sort
+mpiexec -n 4 ./main
