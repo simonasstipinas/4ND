@@ -7,22 +7,24 @@
 void merge(int *, int *, int, int, int);
 
 void mergeSort(int *, int *, int, int);
-void mergeSortWithDepth(int *, int *, int, int, int);
 
-int cmpfunc (const void * a, const void * b) {
-    return ( *(int*)a - *(int*)b );
+void mergeWithDepth(int *, int *, int, int, int);
+
+int cmpfunc(const void *a, const void *b) {
+    return (*(int *) a - *(int *) b);
 }
 
 int main(int argc, char **argv) {
 
-    int n = 130000000;
+    int n = atoi(argv[1]);
     int *original_array = NULL;
     int *copy_original_array = NULL;
+    clock_t t;
 
     int c;
     int world_rank;
     int world_size;
-
+    int *sorted = NULL;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -31,42 +33,46 @@ int main(int argc, char **argv) {
         copy_original_array = malloc(n * sizeof(int));
         srand(1);
         for (c = 0; c < n; c++) {
-            int temp = rand() % 5;
+            int temp = rand();
             original_array[c] = temp;
             copy_original_array[c] = temp;
         }
         qsort(copy_original_array, n, sizeof(int), cmpfunc);
+        t = clock();
     }
-    int size = n / world_size;
 
+    int size = n / world_size;
     int *sub_array = malloc(size * sizeof(int));
     MPI_Scatter(original_array, size, MPI_INT, sub_array, size, MPI_INT, 0, MPI_COMM_WORLD);
-
     int *tmp_array = malloc(size * sizeof(int));
-    clock_t t;
-    t = clock();
-
     mergeSort(sub_array, tmp_array, 0, (size - 1));
 
-    int *sorted = NULL;
     if (world_rank == 0) {
         sorted = malloc(n * sizeof(int));
     }
     MPI_Gather(sub_array, size, MPI_INT, sorted, size, MPI_INT, 0, MPI_COMM_WORLD);
     if (world_rank == 0) {
         int *other_array = malloc(n * sizeof(int));
-        mergeSortWithDepth(sorted, other_array, 0, (n - 1), world_size);
+        printf("World size %d ", world_size);
+        mergeWithDepth(sorted, other_array, 0, (n - 1), world_size);
+
         t = clock() - t;
         double time_taken = ((double) t) / CLOCKS_PER_SEC; // in seconds
         printf("Programa užtruko: %f sekundes \n", time_taken);
+        printf("\n");
+
+
         bool is_sorted = true;
-        for(c = 0; c < n; c++) {
-            if (sorted[c] != copy_original_array[c]){
+        for (c = 0; c < n; c++) {
+            if (sorted[c] != copy_original_array[c]) {
                 is_sorted = false;
             }
-            printf("%d ", sorted[c]);
+
+//            printf("%d ", sorted[c]);
+//            printf("  %d \n", copy_original_array[c]);
         }
-        printf(" Is array sorted? \n");
+        printf(" Is array sorted?");
+        printf("\n");
         printf(is_sorted ? "true" : "false");
         free(sorted);
         free(other_array);
@@ -115,6 +121,7 @@ void merge(int *a, int *b, int l, int m, int r) {
 }
 
 void mergeSort(int *a, int *b, int l, int r) {
+//    printf("some: ");
     int m;
     if (l < r) {
         m = (l + r) / 2;
@@ -124,12 +131,12 @@ void mergeSort(int *a, int *b, int l, int r) {
     }
 }
 
-void mergeSortWithDepth(int *a, int *b, int l, int r, int depth) {
+void mergeWithDepth(int *a, int *b, int l, int r, int depth) {
     int m;
     if (l < r && depth > 1) {
         m = (l + r) / 2;
-        mergeSortWithDepth(a, b, l, m, depth/2);
-        mergeSortWithDepth(a, b, (m + 1), r, depth/2);
+        mergeWithDepth(a, b, l, m, depth / 2);
+        mergeWithDepth(a, b, (m + 1), r, depth / 2);
         merge(a, b, l, m, r);
     }
 }
