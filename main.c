@@ -7,6 +7,7 @@
 void merge(int *, int *, int, int, int);
 
 void mergeSort(int *, int *, int, int);
+void mergeSortWithDepth(int *, int *, int, int, int);
 
 int cmpfunc (const void * a, const void * b) {
     return ( *(int*)a - *(int*)b );
@@ -54,30 +55,18 @@ int main(int argc, char **argv) {
     MPI_Gather(sub_array, size, MPI_INT, sorted, size, MPI_INT, 0, MPI_COMM_WORLD);
     if (world_rank == 0) {
         int *other_array = malloc(n * sizeof(int));
-
-
-
-//        for (c = 0; c < n; c++) {
-//            printf("%d ", copy_original_array[c]);
-//        }
-//        printf("\n");
-
-        mergeSort(sorted, other_array, 0, (n - 1));
-
+        mergeSortWithDepth(sorted, other_array, 0, (n - 1), world_size);
         t = clock() - t;
         double time_taken = ((double) t) / CLOCKS_PER_SEC; // in seconds
         printf("Programa užtruko: %f sekundes \n", time_taken);
-        printf("\n");
-
-
         bool is_sorted = true;
         for(c = 0; c < n; c++) {
             if (sorted[c] != copy_original_array[c]){
                 is_sorted = false;
             }
-//            printf("%d ", sorted[c]);
+            printf("%d ", sorted[c]);
         }
-        printf(" Is array sorted?");
+        printf(" Is array sorted? \n");
         printf(is_sorted ? "true" : "false");
         free(sorted);
         free(other_array);
@@ -126,12 +115,21 @@ void merge(int *a, int *b, int l, int m, int r) {
 }
 
 void mergeSort(int *a, int *b, int l, int r) {
-//    printf("some: ");
     int m;
     if (l < r) {
         m = (l + r) / 2;
         mergeSort(a, b, l, m);
         mergeSort(a, b, (m + 1), r);
+        merge(a, b, l, m, r);
+    }
+}
+
+void mergeSortWithDepth(int *a, int *b, int l, int r, int depth) {
+    int m;
+    if (l < r && depth > 1) {
+        m = (l + r) / 2;
+        mergeSortWithDepth(a, b, l, m, depth/2);
+        mergeSortWithDepth(a, b, (m + 1), r, depth/2);
         merge(a, b, l, m, r);
     }
 }
