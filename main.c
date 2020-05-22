@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
     if (world_rank == 0) {
         int *other_array = malloc(n * sizeof(int));
         printf("World size %d ", world_size);
-        mergeSort(sorted, other_array, 0, (n - 1));
+        mergeWithDepth(sorted, other_array, 0, (n - 1), world_size);
 
         t = clock() - t;
         double time_taken = ((double) t) / CLOCKS_PER_SEC; // in seconds
