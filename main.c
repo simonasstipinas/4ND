@@ -16,9 +16,9 @@ int cmpfunc(const void *a, const void *b) {
 
 int main(int argc, char **argv) {
 
-    int n = 70000000;
+    int n = 16;
     int *original_array = NULL;
-    int *copy_original_array = NULL;
+//    int *copy_original_array = NULL;
     clock_t t;
 
     int c;
@@ -30,14 +30,14 @@ int main(int argc, char **argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     if (world_rank == 0) {
         original_array = malloc(n * sizeof(int));
-        copy_original_array = malloc(n * sizeof(int));
+//        copy_original_array = malloc(n * sizeof(int));
         srand(1);
         for (c = 0; c < n; c++) {
             int temp = rand();
             original_array[c] = temp;
-            copy_original_array[c] = temp;
+//            copy_original_array[c] = temp;
         }
-        qsort(copy_original_array, n, sizeof(int), cmpfunc);
+//        qsort(copy_original_array, n, sizeof(int), cmpfunc);
         t = clock();
     }
 
@@ -54,26 +54,26 @@ int main(int argc, char **argv) {
     if (world_rank == 0) {
         int *other_array = malloc(n * sizeof(int));
         printf("World size %d ", world_size);
-        mergeWithDepth(sorted, other_array, 0, (n - 1), world_size);
+        mergeSort(sorted, other_array, 0, (n - 1));
 
         t = clock() - t;
         double time_taken = ((double) t) / CLOCKS_PER_SEC; // in seconds
-        printf("Programa užtruko: %f sekundes \n", time_taken);
+        printf("Programa užtruko: %f sekundes su %d branduoliu \n", time_taken, world_size);
         printf("\n");
 
 
-        bool is_sorted = true;
-        for (c = 0; c < n; c++) {
-            if (sorted[c] != copy_original_array[c]) {
-                is_sorted = false;
-            }
-
-//            printf("%d ", sorted[c]);
-//            printf("  %d \n", copy_original_array[c]);
-        }
-        printf(" Is array sorted?");
-        printf("\n");
-        printf(is_sorted ? "true" : "false");
+//        bool is_sorted = true;
+//        for (c = 0; c < n; c++) {
+//            if (sorted[c] != copy_original_array[c]) {
+//                is_sorted = false;
+//            }
+//
+////            printf("%d ", sorted[c]);
+////            printf("  %d \n", copy_original_array[c]);
+////        }
+//        printf(" Is array sorted?");
+//        printf("\n");
+//        printf(is_sorted ? "true" : "false");
         free(sorted);
         free(other_array);
     }
